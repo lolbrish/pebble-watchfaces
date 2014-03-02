@@ -45,7 +45,7 @@ static const char* STR_OH_CLOCK = "o'clock";
 static const char* STR_NOON = "noon";
 static const char* STR_MIDNIGHT = "midnight";
 static const char* STR_QUARTER = "quarter";
-static const char* STR_TO = "to";
+static const char* STR_TO = "till";
 static const char* STR_PAST = "past";
 static const char* STR_HALF = "half";
 static const char* STR_AFTER = "after";
@@ -83,7 +83,7 @@ static size_t append_string(char* buffer, const size_t length, const char* str) 
   return (length > written) ? written : length;
 }
 
-void fuzzy_time_to_words(int hours, int minutes, char* words, size_t length, int vibe_int) {
+void fuzzy_time_to_words(int hours, int minutes, char* words, char* words_b, size_t length) {
   int fuzzy_hours = hours;
   int fuzzy_minutes = ((minutes + 2) / 5) * 5;
 
@@ -96,19 +96,11 @@ void fuzzy_time_to_words(int hours, int minutes, char* words, size_t length, int
     }
   }
 
+
+  // light text 
+  
   size_t remaining = length;
   memset(words, 0, length);
-
-  // DEBUG : for seeing vibe interval
-
-  /*
-  char temp_buffer[64];
-  snprintf(temp_buffer, 64, "%d", vibe_int);
-
-  remaining -= append_string(words, remaining, "(");
-  remaining -= append_string(words, remaining, temp_buffer);
-  remaining -= append_string(words, remaining, ") ");
-  */
 
 
   if (fuzzy_minutes != 0 && (fuzzy_minutes >= 10 || fuzzy_minutes == 5 || fuzzy_hours == 0 || fuzzy_hours == 12)) {
@@ -144,16 +136,22 @@ void fuzzy_time_to_words(int hours, int minutes, char* words, size_t length, int
     }
   }
 
+
+  // bold text
+  // reset
+  remaining = length;
+  memset(words_b, 0, length);
+  
   if (fuzzy_hours == 0) {
-    remaining -= append_string(words, remaining, STR_MIDNIGHT);
+    remaining -= append_string(words_b, remaining, STR_MIDNIGHT);
   } else if (fuzzy_hours == 12) {
-    remaining -= append_string(words, remaining, STR_NOON);
+    remaining -= append_string(words_b, remaining, STR_NOON);
   } else {
-    remaining -= append_number(words, fuzzy_hours % 12);
+    remaining -= append_number(words_b, fuzzy_hours % 12);
   }
 
   if (fuzzy_minutes == 0 && !(fuzzy_hours == 0 || fuzzy_hours == 12)) {
-    remaining -= append_string(words, remaining, " ");
-    remaining -= append_string(words, remaining, STR_OH_CLOCK);
+    remaining -= append_string(words_b, remaining, " ");
+    remaining -= append_string(words_b, remaining, STR_OH_CLOCK);
   }
 }
