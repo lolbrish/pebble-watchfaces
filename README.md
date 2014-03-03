@@ -21,3 +21,5 @@ In addition, every 15 minutes, it gives a stronger pulse. Wearer must tap the wa
 15 minute timer is continually reset by any large movements of the watch -- these are taken to be suggestions that the wearer is not in front of a computer. Also has the side effect of encouraging wrist/arm movement :)
 
 15 minute timer is also continually reset if the watch is completely still -- taken to be a suggestion that no one is wearing the watch at all! 
+
+dots on the right side of the watch indicate the current 
