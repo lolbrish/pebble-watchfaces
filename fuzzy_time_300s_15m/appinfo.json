@@ -1,22 +1,17 @@
 {
-  "uuid": "19c5d625-de32-42d1-ab4a-7d08edd471dc",
-  "shortName": "Fuzzy Time",
-  "longName": "Fuzzy Time",
-  "companyName": "Pebble Technology",
+  "uuid": "f5ab6a2c-53bc-4868-8758-77f327635d33",
+  "shortName": "Fuzzy 5m 15m",
+  "longName": "Fuzzy Time with 300s vibe and 15m break reminder",
+  "companyName": "Pure Silliness",
   "versionCode": 1,
   "versionLabel": "1.0.0",
   "watchapp": {
     "watchface": true
   },
-  "appKeys": {},
+  "appKeys": {
+    "dummy": 0
+  },
   "resources": {
-    "media": [
-      {
-        "menuIcon": true,
-        "type": "png",
-        "name": "IMAGE_MENU_ICON",
-        "file": "images/menu_icon_fuzzy_watch.png"
-      }
-    ]
+    "media": []
   }
 }

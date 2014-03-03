@@ -18,8 +18,9 @@ As with fuzzy_time_300s, this one gives a light vibration every 5 minutes.
 
 In addition, every 15 minutes, it gives a stronger pulse. Wearer must tap the watch face to acknowledge this stronger pulse, or it will continue to pulse every 1 minute thereafter until wearer acknowledges with a tap. 
 
-15 minute timer is continually reset by any large movements of the watch -- these are taken to be suggestions that the wearer is not in front of a computer. Also has the side effect of encouraging wrist/arm movement :)
+Small dots on the right side of the watch indicate the current status of the 15 minute timer.
 
-15 minute timer is also continually reset if the watch is completely still -- taken to be a suggestion that no one is wearing the watch at all! 
+TODO: 15 minute timer is continually reset by any large movements of the watch -- these are taken to be suggestions that the wearer is not in front of a computer. Also has the side effect of encouraging wrist/arm movement :)
 
-dots on the right side of the watch indicate the current 
+TODO: 15 minute timer is also continually reset if the watch is completely still -- taken to be a suggestion that no one is wearing the watch at all! 
+

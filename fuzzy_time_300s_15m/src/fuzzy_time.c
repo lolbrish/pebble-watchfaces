@@ -1,7 +1,6 @@
 /*
 
    Code modified from fuzzy_time example from the Pebble 2.0 SDK
-   Circle drawing code from just_a_bit example, also from Pebble 2.0 SDK
 
 */
 
@@ -12,7 +11,7 @@
 #define EXTRA_SPACE 1 // I don't know why the text seems to need 1 extra pixel?
 #define STRONG_DEFAULT 15
 
-#define CIRCLE_RADIUS 4
+#define CIRCLE_RADIUS 2
 
 
 
@@ -69,40 +68,49 @@ static struct CommonWordsData {
 } s_data;
 
 
-void draw_circle(GContext* ctx) {
-  // if strong_counter = 0
-  // clear circles
-  
-  // else
-  // draw a new circle up on the screen at location of strong_counter
-  
-  int16_t circle_x = 5;
-  int16_t circle_y = 5;
 
-  GPoint center = GPoint(circle_x, circle_y);
-    
+
+GPoint get_center(int circle_num) {
+  
+  GRect frame = layer_get_frame(window_get_root_layer(s_data.window));
+  int spacing = (frame.size.h - (STRONG_DEFAULT + CIRCLE_RADIUS)) / (STRONG_DEFAULT+1);
+  int16_t ctr_y = circle_num*spacing + circle_num*(CIRCLE_RADIUS*2) + CIRCLE_RADIUS;
+
+  int16_t ctr_x = frame.size.w - CIRCLE_RADIUS -1;
+
+  GPoint center = GPoint(ctr_x, ctr_y);
+  
+  return center;
+}
+
+void draw_circle(GContext* ctx, GPoint center) {
   graphics_context_set_fill_color(ctx, GColorWhite);
   graphics_fill_circle(ctx, center, CIRCLE_RADIUS);
 }
 
-
-
+void display_layer_update_callback(Layer *me, GContext* ctx) {
+  // draw each circle from 1 to current number
+  
+  for(int i = 0; i < strong_counter; i++) {
+    draw_circle(ctx, get_center(i));
+  }
+}
 
 static void update_time(struct tm* t) {
   fuzzy_time_to_words(t->tm_hour, t->tm_min, s_data.buffer, s_data.buffer_b, BUFFER_SIZE);
   text_layer_set_text(s_data.label, s_data.buffer);
   text_layer_set_text(s_data.label_h, s_data.buffer_b);
   
-  // realign margins based on how much space text actually takes up
+  // realign text/margins based on how much space text actually takes up
   
   GRect frame = layer_get_frame(window_get_root_layer(s_data.window));
-  GSize minute_size = text_layer_get_content_size( s_data.label);
+  GSize minute_size = text_layer_get_content_size(s_data.label);
   GSize hour_size = text_layer_get_content_size(s_data.label_h);
   
-  int top_margin = (frame.size.h - minute_size.h - hour_size.h)/2;
+  int top_margin = (frame.size.h - minute_size.h - hour_size.h)/2 - 6; // extra -3 because font isn't as tall as it claims
   
-  layer_set_frame((Layer *)s_data.label, GRect(0, top_margin, frame.size.w, frame.size.h - top_margin));
-  layer_set_frame((Layer *)s_data.label_h, GRect(0, minute_size.h + top_margin + EXTRA_SPACE, frame.size.w, frame.size.h - minute_size.h - top_margin - EXTRA_SPACE));
+  layer_set_frame((Layer *)s_data.label, GRect(0, top_margin, frame.size.w, minute_size.h+EXTRA_SPACE));
+  layer_set_frame((Layer *)s_data.label_h, GRect(0, minute_size.h + top_margin + EXTRA_SPACE, frame.size.w, hour_size.h+EXTRA_SPACE));
 }
 
 static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
@@ -113,7 +121,7 @@ static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
       update_time(tick_time);
   }
   strong_counter++;
-  draw_counter_circles();
+  layer_mark_dirty(s_data.circles_layer);
   if(strong_counter == strong_interval) {
     vibes_enqueue_custom_pattern(strong_vibe_pattern);
     strong_counter = 14; // want it to go off again in 1 minute
@@ -124,7 +132,7 @@ void accel_tap_handler(AccelAxisType axis, int32_t direction) {
   // Process tap on ACCEL_AXIS_X, ACCEL_AXIS_Y or ACCEL_AXIS_Z
   // Direction is 1 or -1
   strong_counter = 1; // reset strong vibe interval counter; watch was tapped
-  draw_counter_circles();
+  layer_mark_dirty(s_data.circles_layer);
 }
 
 
@@ -160,7 +168,7 @@ static void do_init(void) {
   // circle counters
   s_data.circles_layer = layer_create(frame);
   layer_set_update_proc(s_data.circles_layer, &display_layer_update_callback);
-  layer_add_child(root_layer, s.data_circles_layer);
+  layer_add_child(root_layer, s_data.circles_layer);
 
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
