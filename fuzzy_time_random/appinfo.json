@@ -1,0 +1,17 @@
+{
+  "uuid": "1bc4a46e-95b7-4b5a-aeb3-205f8b77cfa9",
+  "shortName": "fuzzy_time_random",
+  "longName": "fuzzy_time_random",
+  "companyName": "Pure Silliness",
+  "versionCode": 1,
+  "versionLabel": "1.0.0",
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
